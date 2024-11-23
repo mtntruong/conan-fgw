@@ -1,4 +1,6 @@
+import os
 import torch
+import shortuuid
 
 from .bregman import fgw
 from .utils import dist, update_feature_matrix, update_square_loss, update_kl_loss
@@ -214,6 +216,14 @@ def fgw_barycenters(
                 print("{:5d}|{:8e}|".format(cpt, err_rel_loss))
 
         cpt += 1
+        
+    filename = shortuuid.uuid()
+    torch.save({
+            'Y': Y,
+            'Ys': Ys,
+            'C': C,
+            'Cs': Cs,
+            }, os.path.join('/home/caduser/conan++/barydata/', filename+'.pt'))
 
     if log:
         log_["T"] = T
@@ -397,3 +407,4 @@ def normalize_tensor(tensor, a, b):
     normalized_tensor = a + (tensor - min_value) * (b - a) / (max_value - min_value)
 
     return normalized_tensor
+
